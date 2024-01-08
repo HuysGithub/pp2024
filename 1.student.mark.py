@@ -5,6 +5,15 @@
 
 # student: ID, Name, DoB, Mark
 # course: Course, ID, Course Name,
+def checkValidDataType(datatype,message):
+    while True:
+        try:
+            userInput = input(message)
+            variable = datatype(userInput)
+            break
+        except:
+            print(f"\033[1;31mInvalid input. Please enter a valid {datatype.__name__}.\033[0m")
+    return variable
 
 def inputStudentInfo():
     ID = input("\nID: ")
@@ -29,10 +38,12 @@ def displayCourseInfo(courses):
     for course in courses:
         print(f"Course ID: {course['Course ID']}, Course Name: {course['Course Name']}")
 
-def loadStudentMark(students, CourseID):
+def inputStudentMark(students, CourseID):
     print(f"Enter Mark For Students: Course Name \033[1;32m{CourseID.get('Course Name')}\033[0m Course ID \033[1;32m{CourseID.get('Course ID')}\033[0m")
     for student in students:
-        mark = input(f"Enter mark for {student.get('Name')} ")
+        mark = -1
+        while mark <= 0:
+            mark = checkValidDataType(float,f"Enter mark for {student.get('Name')} ")
         student['Mark'] = { CourseID.get('Course ID') : mark }
         
 def checkCourseIDBeforeAddMark(students,courses):
@@ -41,7 +52,7 @@ def checkCourseIDBeforeAddMark(students,courses):
     for course in courses:
         if course['Course ID'] == courseIDtoLoadMark:
             addStatus = True
-            loadStudentMark(students,course)
+            inputStudentMark(students,course)
     if addStatus == False:
         print(f'There is no course has Course ID = "{courseIDtoLoadMark}"')
     
@@ -58,20 +69,24 @@ def displayStudentMark(students,selectedCourse):
 def main():
     students = []
     courses = []
-    
-    numberOfStudents = int(input("Enter the number of students: "))
+    # students
+    numberOfStudents = 0
+    while numberOfStudents <= 0:
+        numberOfStudents = checkValidDataType(int, "Enter the number of students: ")
     for _ in range(numberOfStudents):
         student_info = inputStudentInfo()
         students.append(student_info)
-        
     displayStudentInfo(students)
     
-    numberOfCourse = int(input("\nEnter the number of courses: "))
+    # courses
+    numberOfCourse = 0
+    while numberOfCourse <= 0:
+        numberOfCourse = checkValidDataType(int, "Enter the number of courses: ")
     for _ in range(numberOfCourse):
         course_info = inputCourseInfo(students)
         courses.append(course_info)
-    
     displayCourseInfo(courses)
+    
     checkCourseIDBeforeAddMark(students,courses)
     selectedCourse = input("Enter Course ID u want to check mark: ")
     displayStudentMark(students,selectedCourse)
