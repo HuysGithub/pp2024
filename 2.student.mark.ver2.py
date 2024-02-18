@@ -85,6 +85,17 @@ def main():
     listingStudent(students)
     
     listingCourses(courses)
+    
+    courseID = input("Show student mark for given course:\n> ")
+    checkStatus = False
+    for course in courses:
+        if course.getCourseID().lower() == courseID or course.getCourseName().lower() == courseID:
+            checkStatus = True
+            for student in students:
+                print(f"{student.getId()}\t{student.getName()}\t{student.getDob()}\t{student.getScore(courseID)}")
+                
+    if checkStatus == False:
+        print(f"Course {courseID} Not Found")
 
 if __name__ == "__main__":
     main()
