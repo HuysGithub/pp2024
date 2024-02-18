@@ -59,14 +59,14 @@ def main():
     numberOfCourse = 0
     
     # input student
-    numberOfStudent = input("How many students? \n> ")
-    for _ in numberOfStudent:
+    numberOfStudent = int(input("How many students? \n> "))
+    for _ in range(numberOfStudent):
         student = inputStudent() # one student as a dict
         students.append(student)
     
     # input course
-    numberOfCourse = input("How many courses?\n> ")
-    for _ in numberOfCourse:
+    numberOfCourse = int(input("How many courses?\n> "))
+    for _ in range(numberOfCourse):
         course = inputCourse()
         courses.append(course)
         
