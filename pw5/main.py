@@ -12,7 +12,6 @@ def main(stdscr):
     courses = []
     
     file_to_compress = ['pw5/students.txt', 'pw5/courses.txt', 'pw5/marks.txt']
-    
     compressed_file = 'pw5/students.dat'
 
     # Decompress
@@ -26,7 +25,7 @@ def main(stdscr):
         if path.is_file():
             with open(path, "r") as file:
                 for line in file:
-                    parts = line.strip().split(",")  # Loại bỏ dấu xuống dòng và chia dòng thành các phần
+                    parts = line.strip().split(",")
                     if 'students' in str(path):
                         student = st.Student(parts[0], parts[1], parts[2])
                         students.append(student)
@@ -35,7 +34,7 @@ def main(stdscr):
                         courses.append(course)
                         
     if (pw5_path/'marks.txt').is_file():
-        with open("marks.txt", "r") as file:
+        with open(pw5_path/"marks.txt", "r") as file:
             for line in file:
                 parts = line.strip().split(",")
                 for course in courses:
@@ -95,7 +94,7 @@ def main(stdscr):
             stdscr.clear()
             stdscr.refresh()
 
-        elif choice == ord('7'):
+        elif choice == ord('7'):  # Sort student list by GPA descending
             stdscr.clear()
             sorted_students = sorted(students, key=lambda x: x.calculateGPA(courses), reverse=True)
             stdscr.addstr(0,0,"Sorted student list by GPA descending:")
@@ -114,11 +113,33 @@ def main(stdscr):
             stdscr.refresh()
             
         elif choice == ord('8'):  # Exit
-            with zipfile.ZipFile(compressed_file, "a") as zipf:
-                for file in file_to_compress:
-                    if os.path.isfile(file):
-                        zipf.write(file)
-                        os.remove(file)
+            # Zipfile before quit
+            stdscr.clear()
+            stdscr.addstr(0, 0,"Select compression method:")
+            stdscr.addstr(2, 0,"1. ZIP DEFLATED")
+            stdscr.addstr(3, 0,"2. ZIP BZIP2")
+            stdscr.addstr(4, 0,"3. ZIP LZMA ")
+            stdscr.refresh()
+            key = stdscr.getch()
+            if key == ord('1'):
+                with zipfile.ZipFile(compressed_file, "a",compression= zipfile.ZIP_DEFLATED) as zipf:
+                    for file in file_to_compress:
+                        if os.path.isfile(file):
+                            zipf.write(file)
+                            os.remove(file)
+            elif key == ord('2'):
+                with zipfile.ZipFile(compressed_file, "a",compression= zipfile.ZIP_BZIP2) as zipf:
+                    for file in file_to_compress:
+                        if os.path.isfile(file):
+                            zipf.write(file)
+                            os.remove(file)
+            elif key == ord('3'):
+                with zipfile.ZipFile(compressed_file, "a",compression= zipfile.ZIP_LZMA) as zipf:
+                    for file in file_to_compress:
+                        if os.path.isfile(file):
+                            zipf.write(file)
+                            os.remove(file)
+                            
             break
 
 
